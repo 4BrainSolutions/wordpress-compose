@@ -12,10 +12,11 @@ services:
     ports:
       - '32772:80'
     environment:
-      - 'WORDPRESS_DB_HOST: db'
-      - 'WORDPRESS_DB_USER: exampleuser'
-      - 'WORDPRESS_DB_PASSWORD: examplepass'
-      - 'WORDPRESS_DB_NAME: exampledb'
+      - 'WORDPRESS_DB_HOST=mariadb'
+      - 'WORDPRESS_DB_NAME=wordpressdb'
+      - 'WORDPRESS_DB_USER=wordpressuser'
+      - 'WORDPRESS_DB_PASSWORD=jellyfish'
+      - 'WORDPRESS_TABLE_PREFIX=wp_'
     restart: always
     logging:
       # limit logs retained on host to 25MB
@@ -29,12 +30,12 @@ services:
     networks:
       - wordpressnet
     volumes:
-      - mariadb_data:/var/lib/mariadb/data
+      - mariadb_data:/var/lib/mysql
     environment:
-      - 'mariadb_USER=wordpressuser'
-      # CHANGE THE PASSWORD!
-      - 'mariadb_PASSWORD=jellyfish'
-      - 'mariadb_DB=wordpressdb'
+      - 'MYSQL_ROOT_PASSWORD=jellyfish'
+      - 'MYSQL_DATABASE=wordpressdb'
+      - 'MYSQL_USER=wordpressuser'
+      - 'MYSQL_PASSWORD=jellyfish'
     restart: always
     logging:
       # limit logs retained on host to 25MB
