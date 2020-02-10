@@ -1,0 +1,54 @@
+version: '2'
+
+services:
+  wordpress:
+    depends_on:
+      - mariadb
+    image: wordpress:latest
+    networks:
+      - wordpressnet
+    volumes:
+      - wordpress_data:/var/www/html
+    ports:
+      - '32772:80'
+    environment:
+      - 'WORDPRESS_DB_HOST: db'
+      - 'WORDPRESS_DB_USER: exampleuser'
+      - 'WORDPRESS_DB_PASSWORD: examplepass'
+      - 'WORDPRESS_DB_NAME: exampledb'
+    restart: always
+    logging:
+      # limit logs retained on host to 25MB
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "50"
+
+  mariadb:
+    image: mariadb:latest
+    networks:
+      - wordpressnet
+    volumes:
+      - mariadb_data:/var/lib/mariadb/data
+    environment:
+      - 'mariadb_USER=wordpressuser'
+      # CHANGE THE PASSWORD!
+      - 'mariadb_PASSWORD=jellyfish'
+      - 'mariadb_DB=wordpressdb'
+    restart: always
+    logging:
+      # limit logs retained on host to 25MB
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "50"
+
+volumes:
+  wordpress_data:
+    external: false
+  mariadb_data:
+    external: false
+
+networks:
+  wordpressnet:
+    driver: bridge
